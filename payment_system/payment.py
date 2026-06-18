@@ -39,11 +39,36 @@ fee2 = b2 * 160
 
 total = fee1 + fee2
 
-print("\n===== 集計 =====")
-print(f"宅急便: {b1}")
-print(f"ネコポス: {b2}")
+import csv
+import os
+from datetime import datetime
 
-print(f"{b1} × 180 = {fee1:,}円")
-print(f"{b2} × 160 = {fee2:,}円")
+csv_file = "sales_history.csv"
 
-print(f"\n合計: {total:,}円")
+today = datetime.now().strftime("%Y-%m-%d")
+
+file_exists = os.path.exists(csv_file)
+
+with open(csv_file, "a", newline="", encoding="utf-8-sig") as f:
+    writer = csv.writer(f)
+
+    if not file_exists:
+        writer.writerow([
+            "日付",
+            "宅急便個数",
+            "ネコポス個数",
+            "宅急便売上",
+            "ネコポス売上",
+            "合計"
+        ])
+
+    writer.writerow([
+        today,
+        b1,
+        b2,
+        fee1,
+        fee2,
+        total
+    ])
+
+print("sales_history.csv に保存しました")
