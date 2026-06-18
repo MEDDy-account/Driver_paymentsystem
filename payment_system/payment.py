@@ -21,54 +21,29 @@ print("=== OCR結果 ===")
 print(text)
 
 # 数字を全部取得
+# 数字を全部取得
 nums = [int(x) for x in re.findall(r"\d+", text)]
 
 print("\n抽出数字")
 print(nums)
 
-# 今回の画像では
-# [126,115,115,11,126,72,72,72,0,72,198,187,187,11,198]
-#
-# 真ん中の115と72を採用
+if len(nums) < 8:
+    raise ValueError("必要な数字が取得できませんでした")
 
-b1 = 115
-b2 = 72
+# OCR結果の位置から取得
+b1 = nums[3]
+b2 = nums[7]
+
+print(f"宅急便個数: {b1}")
+print(f"ネコポス個数: {b2}")
 
 fee1 = b1 * 180
 fee2 = b2 * 160
 
 total = fee1 + fee2
 
-import csv
-import os
-from datetime import datetime
-
-csv_file = "sales_history.csv"
-
-today = datetime.now().strftime("%Y-%m-%d")
-
-file_exists = os.path.exists(csv_file)
-
-with open(csv_file, "a", newline="", encoding="utf-8-sig") as f:
-    writer = csv.writer(f)
-
-    if not file_exists:
-        writer.writerow([
-            "日付",
-            "宅急便個数",
-            "ネコポス個数",
-            "宅急便売上",
-            "ネコポス売上",
-            "合計"
-        ])
-
-    writer.writerow([
-        today,
-        b1,
-        b2,
-        fee1,
-        fee2,
-        total
-    ])
-
+print("\n===== 集計 =====")
+print(f"宅急便売上: {fee1:,}円")
+print(f"ネコポス売上: {fee2:,}円")
+print(f"合計: {total:,}円")
 print("sales_history.csv に保存しました")
